@@ -1,0 +1,17 @@
+<svg version="1.1" viewBox="-27.5 -27.5 55 55" width="55" xmlns="http://www.w3.org/2000/svg">
+  <!--
+    The y coordinate of the centroid of the cursor is the same as the y
+    coordinate of one its triangular halfs. All coordinates are relative
+    to the tip and the centroid is at 0,0. We can calculate the offset
+    from the centroid to the tip as follows:
+      y_c = 0 = 1/3 * (-y_t + (40 - y_t) + (32 - y_t))
+             <=>
+          y_t = 1/3 * (40 + 32)
+              = 24
+  -->
+  <path fill="hsl(240deg 100% 50%)" d="M0,0 v-24 l-12,40 z" />
+  <path fill="hsl(240deg 100% 65%)" d="M0,0 l-12,16 l12,-8 z" />
+  <path fill="hsl(240deg 100% 50%)" d="M0,0 l12,16 l-12,-8 z" />
+  <path fill="hsl(240deg 100% 65%)" d="M0,0 v-24 l12,40 z" />
+  <path fill="none" stroke="white" stroke-width="2" d="M0,-24 l-12,40 l12,-8 l12,8 z" />
+</svg>

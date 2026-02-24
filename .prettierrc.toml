@@ -1,0 +1,13 @@
+trailingComma = "all"
+tabWidth = 4
+semi = false
+quoteProps = "consistent"
+htmlWhitespaceSensitivity = "strict"
+
+[[overrides]]
+files = "*.json"
+options.tabWidth = 2
+
+[[overrides]]
+files = "*.html"
+options.tabWidth = 2

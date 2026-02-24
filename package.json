@@ -1,0 +1,14 @@
+{
+  "name": "dresden-map",
+  "version": "0.0",
+  "private": true,
+  "scripts": {
+    "build": "mkdir -p dist \\\n&& tsc --emitDeclarationOnly --outFile dist/script.d.ts \\\n&& esbuild --bundle --sourcemap --platform=browser --target=es2015 --outfile=dist/script.js main.ts \\\n&& cp -rt dist index.html node_modules/leaflet/dist/images node_modules/leaflet/dist/leaflet.css \\\n&& cp -rt dist/images *.svg \\\n&& magick dist/images/marker-icon-2x.png -gravity center -background none -extent '%[fx:max(w,h)]x%[fx:max(w,h)]' dist/images/favicon.png \\\n&& { zopfli dist/*.html dist/*.css dist/script.* dist/images/*.svg || true; }"
+  },
+  "dependencies": {
+    "leaflet": "^1.9"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.9"
+  }
+}
