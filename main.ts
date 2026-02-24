@@ -278,7 +278,7 @@ Promise.all([map_initialized, fetch_nextbikes(685)]).then(
         }
 
         const markers = new BoundedMarkerGroup()
-        for (const place of bikes.places) {
+        function add_bike(place: NextbikePlace): void {
             if ((place.bike_types["196"] || 0) > 0) {
                 const pre = document.createElementNS(
                     "http://www.w3.org/1999/xhtml",
@@ -299,6 +299,7 @@ Promise.all([map_initialized, fetch_nextbikes(685)]).then(
                 markers.add(marker)
             }
         }
+        bikes.places.forEach(add_bike)
 
         function update_markers(): void {
             markers.update_active(map.getBounds())
@@ -320,5 +321,16 @@ Promise.all([map_initialized, fetch_nextbikes(685)]).then(
                 }
             },
         )
+
+        // periodically update
+        setInterval(async () => {
+            console.log("refreshing Nextbike locations...")
+            const bikes = await fetch_nextbikes(685)
+            markers.active.forEach((m) => markers.layer_group.removeLayer(m))
+            markers.active = []
+            markers.inactive = []
+            bikes.places.forEach(add_bike)
+            update_markers()
+        }, 300_000)
     },
 )
