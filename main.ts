@@ -286,6 +286,10 @@ Promise.all([map_initialized, fetch_nextbikes(685)]).then(
                     "http://www.w3.org/1999/xhtml",
                     "div",
                 )
+                Object.assign(div.style, {
+                    "max-height": "50vh",
+                    "overflow": "auto",
+                })
 
                 // number of bikes
                 div.appendChild(
@@ -331,16 +335,19 @@ Promise.all([map_initialized, fetch_nextbikes(685)]).then(
                         )
                     ),
                 )
-                details
-                    .appendChild(
-                        document.createElementNS(
-                            "http://www.w3.org/1999/xhtml",
-                            "pre",
-                        ),
-                    )
-                    .appendChild(
-                        document.createTextNode(JSON.stringify(place, null, 2)),
-                    )
+                const pre = details.appendChild(
+                    document.createElementNS(
+                        "http://www.w3.org/1999/xhtml",
+                        "pre",
+                    ),
+                )
+                Object.assign(pre.style, {
+                    "min-width": "40ch",
+                    "white-space": "pre-wrap",
+                })
+                pre.appendChild(
+                    document.createTextNode(JSON.stringify(place, null, 2)),
+                )
 
                 const popup = L.popup({
                     content: div,
