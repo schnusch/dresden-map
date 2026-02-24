@@ -133,6 +133,8 @@ function bounds_in_fragment(map: L.Map): void {
 }
 
 interface NextbikePlace {
+    bikes_available_to_rent?: number
+    bike_numbers?: Array<string>
     bike_types: { [type: string]: number }
     lat: number
     lng: number
@@ -280,13 +282,73 @@ Promise.all([map_initialized, fetch_nextbikes(685)]).then(
         const markers = new BoundedMarkerGroup()
         function add_bike(place: NextbikePlace): void {
             if ((place.bike_types["196"] || 0) > 0) {
-                const pre = document.createElementNS(
+                const div = document.createElementNS(
                     "http://www.w3.org/1999/xhtml",
-                    "pre",
+                    "div",
                 )
-                pre.appendChild(
-                    document.createTextNode(JSON.stringify(place, null, 2)),
+
+                // number of bikes
+                div.appendChild(
+                    document.createElementNS(
+                        "http://www.w3.org/1999/xhtml",
+                        "p",
+                    ),
                 )
+                    .appendChild(
+                        document.createElementNS(
+                            "http://www.w3.org/1999/xhtml",
+                            "strong",
+                        ),
+                    )
+                    .appendChild(
+                        document.createTextNode(
+                            `${place.bikes_available_to_rent || 0} bike${place.bikes_available_to_rent == 1 ? "" : "s"} available:`,
+                        ),
+                    )
+
+                // list of bikes
+                const ul = div.appendChild(
+                    document.createElementNS(
+                        "http://www.w3.org/1999/xhtml",
+                        "ul",
+                    ),
+                )
+                ;(place.bike_numbers || []).forEach((bike: string) => {
+                    ul.appendChild(
+                        document.createElementNS(
+                            "http://www.w3.org/1999/xhtml",
+                            "li",
+                        ),
+                    ).appendChild(document.createTextNode(`Bike ${bike}`))
+                })
+
+                // raw JSON
+                const details = div.appendChild(
+                    <HTMLDetailsElement>(
+                        document.createElementNS(
+                            "http://www.w3.org/1999/xhtml",
+                            "details",
+                        )
+                    ),
+                )
+                details
+                    .appendChild(
+                        document.createElementNS(
+                            "http://www.w3.org/1999/xhtml",
+                            "pre",
+                        ),
+                    )
+                    .appendChild(
+                        document.createTextNode(JSON.stringify(place, null, 2)),
+                    )
+
+                const popup = L.popup({
+                    content: div,
+                })
+                // Resize popup when <details> is opened/closed.
+                details.addEventListener("toggle", () => {
+                    popup.update()
+                })
 
                 const marker = L.circleMarker(L.latLng(place.lat, place.lng), {
                     radius: 5,
@@ -295,7 +357,14 @@ Promise.all([map_initialized, fetch_nextbikes(685)]).then(
                     color: "black",
                     fillColor: "#ffcc00",
                     fillOpacity: 1,
-                }).bindPopup(pre)
+                }).bindPopup(popup)
+
+                // Make sure the <details> is closed before popups are opened,
+                // so the do not overflow the screen.
+                marker.on("popupclose", () => {
+                    details.open = false
+                })
+
                 markers.add(marker)
             }
         }
