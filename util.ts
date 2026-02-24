@@ -4,9 +4,6 @@ export async function fetch_dnt(url: string): Promise<Response> {
     const resp = await fetch(url, {
         credentials: "omit",
         referrerPolicy: "no-referrer",
-        headers: {
-            DNT: "1",
-        },
     })
     if (!resp.ok) {
         throw new Error(`cannot fetch ${url}`)
