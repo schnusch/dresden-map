@@ -210,7 +210,7 @@ async function init_map(): Promise<{ map: L.Map; legend_elem: HTMLElement }> {
 
 const map_initialized = init_map()
 
-function hide_layer_checkbox(
+function create_hide_layer_checkbox(
     legend_elem: HTMLElement,
     label: Node,
     arg: string,
@@ -254,7 +254,7 @@ function hide_layer_checkbox(
 
 map_initialized.then(({ map, legend_elem }) => {
     const layer_group = add_dvb_stops(map)
-    hide_layer_checkbox(
+    create_hide_layer_checkbox(
         legend_elem,
         document.createTextNode("show DVB stops"),
         "dvb",
@@ -378,7 +378,7 @@ Promise.all([map_initialized, fetch_nextbikes(685)]).then(
         )
         update_markers()
 
-        hide_layer_checkbox(
+        create_hide_layer_checkbox(
             legend_elem,
             document.createTextNode("show Nextbikes"),
             "nextbike",
